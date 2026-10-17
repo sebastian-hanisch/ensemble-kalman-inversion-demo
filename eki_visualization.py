@@ -2,12 +2,31 @@
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
 import eki_constants as C
 from eki_evaluation import Analysis, de, loc_label, noise_label, rho_label
+
+
+def _ref_line(fig, value, text, position, axis, log=True, **line_kwargs):
+    """Referenzlinie mit Beschriftung auf einer logarithmischen Achse: die Linie liegt auf dem Datenwert, die Beschriftung braucht log10 des Werts
+    (add_hline und add_vline setzen beide auf denselben Wert, die Beschriftung sitzt dann falsch und dehnt die Achse); log=False für lineare Achsen."""
+    if log and not value > 0.0:
+        return
+    pos = math.log10(value) if log else value
+    top, left = "top" in position, "left" in position
+    if axis == "y":
+        fig.add_hline(y=value, **line_kwargs)
+        if text:
+            fig.add_annotation(xref="paper", yref="y", x=0 if left else 1, y=pos, text=text, showarrow=False, xanchor="left" if left else "right", yanchor="bottom" if top else "top")
+    else:
+        fig.add_vline(x=value, **line_kwargs)
+        if text:
+            fig.add_annotation(xref="x", yref="paper", x=pos, y=1 if top else 0, text=text, showarrow=False, xanchor="right" if left else "left", yanchor="top" if top else "bottom")
 
 
 def _fixed(fig: go.Figure, height: int = 380, **layout) -> go.Figure:
@@ -129,7 +148,7 @@ def build_solver_chart(res: dict, rho: float) -> go.Figure:
     rows = [r for r in res["rows"] if r["rho"] == rho]
     for r, color in zip(rows, C.COLOR_J[:3]):
         fig.add_trace(go.Scatter(x=list(range(len(r["errs"]))), y=[min(v, 1e4) for v in r["errs"]], mode="lines+markers", name=f"J = {r['j']}", line=dict(color=color, width=3), marker=dict(size=5)))
-    fig.add_hline(y=rows[0]["err_map"], line=dict(color=C.COLOR_GREY, dash="dash"), annotation_text="Fehler des MAP", annotation_position="bottom right")
+    _ref_line(fig, rows[0]["err_map"], "Fehler des MAP", "bottom right", "y", line=dict(color=C.COLOR_GREY, dash="dash"))
     fig.update_xaxes(title=f"Iteration (ρ = {rho_label(rho)})")
     fig.update_yaxes(title="Fehler des Ensemblemittels (relativ)", type="log", exponentformat="power")
     return _fixed(fig, 340)
