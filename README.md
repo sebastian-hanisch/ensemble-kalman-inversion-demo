@@ -1,5 +1,7 @@
 # Ensemble-Kalman-Inversion: Wie groß muss das Ensemble sein? – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-ensemble-kalman-inversion-demo.streamlit.app/)**
+
 Zehntes Stück der Linie **Inverse Probleme und Regularisierung** in der „Konzepte“-Reihe im Portfolio von [Sebastian Hanisch](https://sebastianhanisch.net) (Operations Research und Machine Learning). Es baut auf [nichtlinear-inverse-demo](https://github.com/sebastian-hanisch/nichtlinear-inverse-demo), [posterior-sampling-demo](https://github.com/sebastian-hanisch/posterior-sampling-demo), [bayes-map-demo](https://github.com/sebastian-hanisch/bayes-map-demo) und [schlecht-gestellt-demo](https://github.com/sebastian-hanisch/schlecht-gestellt-demo) auf und nutzt dieselbe Welt: ein Phantom aus zwei Hügeln und einem Kasten als Anfangswert einer Wärmeleitung mit logistischer Reaktion, gemessen mit weißem Rauschen. Die Wahrheit ist bekannt, weil das Phantom selbst die Wahrheit ist; sie dient hier nur als Maßstab.
 
 ## Kernfrage
